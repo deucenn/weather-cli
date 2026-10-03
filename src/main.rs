@@ -1,3 +1,6 @@
+mod api;
+
+use api::get_coordinates;
 use std::io::{self, Write};
 
 fn get_city() -> Result<String, Box<dyn std::error::Error>> {
@@ -46,7 +49,13 @@ fn get_country() -> Result<String, Box<dyn std::error::Error>> {
     }
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn request(city: String, country: String) {
+    // TODO: convert city to coordinates
+    get_coordinates(city, country).await;
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut city_in = String::new();
 
     match get_city() {
@@ -71,6 +80,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("city: {}", city_in);
     println!("country: {}", country_in);
+
+    request(city_in, country_in).await;
 
     Ok(())
 }
