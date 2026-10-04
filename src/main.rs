@@ -49,9 +49,17 @@ fn get_country() -> Result<String, Box<dyn std::error::Error>> {
     }
 }
 
-async fn request(city: String, country: String) {
+async fn request(city: String, country: String) -> Result<(), reqwest::Error> {
     // TODO: convert city to coordinates
-    get_coordinates(city, country).await;
+    match api::get_coordinates(city, country).await? {
+        Some(Location) => {
+            println!("request succesfully");
+        }
+        None => {
+            println!("no results for your input");
+        }
+    }
+    Ok(())
 }
 
 #[tokio::main]
